@@ -1,0 +1,114 @@
+@import "vars"
+@import "libs"
+html
+    overflow-y: scroll
+body
+    font-family: Arial, sans-serif
+    color: #565656
+    box-sizing: border-box
+.wrapper
+    margin: o auto
+    max-width: 1200px
+    margin: 5px 20px
+    text-align: center
+    border: 1px solid #ddd
+    border-radius: 15px
+    box-shadow: 0px 7px 24.3px 2.7px rgba(91,89,89,0.14)
+    min-height: 85vh
+    padding: 10px 25px
+.tag,.tag_form-container
+    display: block
+    padding: 2px 60px 6px 2px
+    font-size: 16px
+    color: #595959
+    border: none
+    background-color: rgb(242, 242, 242)
+    border-radius: 10px
+    box-sizing: border-box
+    margin-bottom: 10px
+    text-align: left
+    position: relative
+.tag_form
+    display: flex
+    justify-content: space-between
+    position: relative
+    width: 100%
+.buttons
+    display: flex
+    justify-content: space-around
+    flex-flow: column
+    align-items: center
+    padding: 15px
+.tag_form-container
+    padding-right: 23px
+    width: 100%
+.tag_field,.tag_form-input,
+    white-space: pre-wrap
+    word-break: break-word
+    background: #fff
+    font-size: 14px
+    line-height: 14px
+    min-width: 100%
+    max-width: 100%
+    width: 100%
+    padding: 10px
+    border-radius: 10px
+    color: #595959
+    outline: none
+    resize: inherit
+    border: 0px
+.tag_form-input
+    min-height: 100px
+.small_btn
+    width: 23px
+    height: 23px
+    position: absolute
+    top: 9px
+    border-radius: 4px
+    border: 1px solid #000
+    opacity: 0.6
+    &:hover
+        opacity: 0.8
+
+.tag_delete
+    right: 5px
+    background: url(../img/src/delete.png) center no-repeat
+    background-size: 24px
+.btn,.readonly
+    box-sizing: border-box
+    background-color: #909090
+    color: rgb(255, 255, 255)
+    padding: 10px
+    width: 140px
+    font-size: 12px
+    font-weight: 700
+    border-radius: 7px
+    text-transform: uppercase
+    outline: none
+    border: none
+    cursor: pointer
+    box-shadow: 0px 7px 24.3px 2.7px rgba(91,89,89,0.14)
+    opacity: 0.7
+    &:hover
+        opacity: 0.9
+.disabled
+    background-color: rgba(255,0,0,0.2)!important
+
+[data-placeholder]:empty:before
+    content: attr(data-placeholder)
+    color: #595959
+
+@media ( max-width:600px )
+    .finder
+        flex-wrap: wrap
+        padding: 2px 22px 6px 2px
+    .check_done,.check_inprogress
+        margin: 10px
+@media ( max-width:420px )
+    .checkboxes
+        flex-wrap: wrap
+    .buttons
+        padding: 10px
+    .btn
+        width: 74px
+        font-size: 10px
