@@ -1,50 +1,40 @@
-const tagList = () => {
-  // ---------------------------- Readonly mode
-  const readOnlyCheckBox = document.querySelector(".readonly_checkbox")
-  let readOnly
+const obj = {
+  tagList: [],
+  readOnly: '',
 
-  const disabled = () => {
-    readOnly = !readOnly
-    addtoLocalStorage()
-  }
-  readOnlyCheckBox.addEventListener('change', disabled)
+  //----------- getter to get the list of tags
 
-  if (localStorage.getItem("readonly")) {
-    readOnly = JSON.parse(localStorage.getItem("readonly"));
-    readOnlyCheckBox.checked = readOnly
-  }
-  else {
-    readOnly = false
-    readOnlyCheckBox.checked = readOnly
-  }
+  get tags() {
+    return this.tagList
+  },
 
-  // ---------------------------- Add new tag
+  //----------- setter to set the new list of tags
 
-  const buttonAdd = document.querySelector(".btn-add");
-  let tagList = [];
+  set tags(value) {
+    this.tagList = value
+    this.out(this.tagList)
+    this.addtoLocalStorage()
+  },
+  //----------- method for adding one tag
 
-  if (localStorage.getItem("tag")) {
-    tagList = JSON.parse(localStorage.getItem("tag"));
-    out(tagList);
-  }
-
-  buttonAdd.addEventListener("click", addtag);
-  function addtag() {
-    if (!readOnly) {
-      let tag = document.querySelector(".tag_form-input");
-      console.log(tag.value)
-      if (tag.innerText) {
-        let temp = {
-          tag: tag.innerText,
-        };
-        tagList.push(temp);
-        addtoLocalStorage();
-        out(tagList);
-        tag.innerText = ''
+  addNewtag: function () {
+    const buttonAdd = document.querySelector(".btn-add");
+    buttonAdd.onclick = () => {
+      if (!this.readOnly) {
+        let tag = document.querySelector(".tag_form-input");
+        if (tag.innerText) {
+          let temp = {
+            tag: tag.innerText,
+          };
+          this.tagList.push(temp)
+          this.out(this.tagList)
+          this.addtoLocalStorage()
+          tag.innerText = ''
+        }
       }
     }
-  }
-  function out(x) {
+  },
+  out: function (x) {
     let out = document.querySelector(".out");
     out.innerHTML = "";
     for (let key in x) {
@@ -55,40 +45,76 @@ const tagList = () => {
         <div class="tag_field" data-value="${key}">${x[key].tag}</div><div>`
       );
     }
-  }
-  // ---------------------------- Add to the LocalStorage
+  },
 
-  function addtoLocalStorage() {
-    localStorage.setItem("tag", JSON.stringify(tagList));
-    localStorage.setItem("readonly", JSON.stringify(readOnly));
-  }
+  //----------- method for adding the list of tags to LocalStorage
 
-  // ---------------------------- Delete button
+  addtoLocalStorage: function () {
+    localStorage.setItem("tag", JSON.stringify(this.tagList));
+    localStorage.setItem("readonly", JSON.stringify(this.readOnly));
+  },
 
-  document.querySelector('.out').onclick = (e) => {
-    if (!readOnly) {
-      if (e.target.className != 'small_btn tag_delete') return
-      let tag = e.target.closest('.tag')
+  //----------- method for readonly mode
 
-      if (confirm("Are you shure?")) {
-        tagList.splice(tag.getAttribute('data-value'), 1)
-        addtoLocalStorage()
-        out(tagList)
+  disabled: function () {
+    const readOnlyCheckBox = document.querySelector(".readonly_checkbox")
+    readOnlyCheckBox.onchange = () => {
+      this.readOnly = !this.readOnly
+      this.addtoLocalStorage()
+    }
+  },
+
+  //----------- method for deleting one tag
+
+  delete_btn: function () {
+    document.querySelector('.out').onclick = (e) => {
+      if (!this.readOnly) {
+        if (e.target.className != 'small_btn tag_delete') return
+        let tag = e.target.closest('.tag')
+        if (confirm("Are you shure?")) {
+          this.tagList.splice(tag.getAttribute('data-value'), 1)
+          this.addtoLocalStorage()
+          this.out(this.tagList)
+        }
       }
     }
-  }
+  },
 
-  // ---------------------------- New list
+  //----------- method for deleting all tags
 
-  const buttonReset = document.querySelector(".btn-reset");
-  buttonReset.onclick = () => {
-    if (!readOnly) {
-      if (confirm("Are you shure? Current list will be deleted.")) {
-        tagList = [];
-        localStorage.clear();
-        out(tagList)
+  newList: function () {
+    const buttonReset = document.querySelector(".btn-reset");
+    buttonReset.onclick = () => {
+      if (!this.readOnly) {
+        if (confirm("Are you shure? Current list will be deleted.")) {
+          this.tagList = [];
+          localStorage.clear();
+          this.out(this.tagList)
+        }
       }
     }
+  },
+
+  //----------- method for reading from LocalStorage
+
+  load: function () {
+    const readOnlyCheckBox = document.querySelector(".readonly_checkbox")
+    if (localStorage.getItem("readonly")) {
+      obj.readOnly = JSON.parse(localStorage.getItem("readonly"));
+      readOnlyCheckBox.checked = obj.readOnly
+    }
+    else {
+      obj.readOnly = false
+      readOnlyCheckBox.checked = obj.readOnly
+    }
+    if (localStorage.getItem("tag")) {
+      obj.tagList = JSON.parse(localStorage.getItem("tag"));
+      obj.out(obj.tagList);
+    }
+    this.addNewtag();
+    this.delete_btn();
+    this.disabled();
+    this.newList();
   }
 }
-tagList();
+obj.load()
